@@ -1,0 +1,72 @@
+[General]
+loglevel = warning
+# bypass-system = true
+skip-proxy = 127.0.0.1,192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,100.64.0.0/10,localhost,*.local,e.crashlytics.com,captive.apple.com,::ffff:0:0:0:0/1,::ffff:128:0:0:0/1
+# bypass-tun = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12
+dns-server = system
+allow-wifi-access = false
+test-timeout = 5
+proxy-test-url = http://www.gstatic.com/generate_204
+internet-test-url = http://www.gstatic.com/generate_204
+external-controller-access = 0723@0.0.0.0:6170
+http-api = 0723@0.0.0.0:6171
+http-api-tls = false
+http-api-web-dashboard = true
+wifi-assist = false
+hide-vpn-icon = true
+ipv6 = true
+doh-server = https://dh-dns.global-idc.net/dns-query
+force-http-engine-hosts =  *.cp31.ott.cibntv.net,*.ott.cibntv.net,116.253.24.*,119.18.193.135,119.79*,122.14.246.33,123.59.31.1,124.14*,124.193*,175.102.178.52,175.6.26.*,211.162*,220.112*,220.169.153.*
+
+[Proxy Group]
+Master = select, TW, HK, SG, JP, US, Game, Other, ALL, update-interval=21600, no-alert=0, hidden=0, persistent=1
+Game = load-balance, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&class=9, update-interval=21600, no-alert=1, hidden=1, policy-regex-filter=游戏, persistent=0
+TW = fallback, TW Metro, TW other, update-interval=0, no-alert=1, hidden=1, persistent=1
+HK = fallback, HK Metro, HK other, no-alert=1, hidden=1
+Netflix = select, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, update-interval=0, policy-regex-filter=^(?=.*\*)(?=.*台湾|新加坡|日本|美国).*$, no-alert=0, hidden=0
+Telegram = select, Master, Game, HK, no-alert=0, hidden=0
+Apple = select, DIRECT, Master, US, no-alert=0, hidden=0
+Bilibili = select, DIRECT, TW, HK, no-alert=0, hidden=0
+Emby = select, DIRECT, Master, SG, HK, no-alert=0, hidden=0
+TW Metro = fallback, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, update-interval=0, policy-regex-filter=台湾 Metro, no-alert=1, hidden=1, persistent=1
+TW other = fallback, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, update-interval=0, policy-regex-filter=^((?!Metro).)*(台湾)((?!Metro).)*$, no-alert=1, hidden=1, persistent=1
+HK Metro = fallback, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, update-interval=0, policy-regex-filter=香港 Metro, no-alert=1, hidden=1, persistent=1
+HK other = fallback, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, update-interval=0, policy-regex-filter=^((?!Metro).)*(香港|HK)((?!Metro).)*$, no-alert=1, hidden=1, persistent=1
+SG = fallback, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, update-interval=0, policy-regex-filter=新加坡, no-alert=1, hidden=1, persistent=1
+JP = fallback, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, update-interval=0, policy-regex-filter=日本 Metro, no-alert=1, hidden=1, persistent=1
+US = fallback, update-interval=0, policy-regex-filter=美国, no-alert=1, hidden=1, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, persistent=1
+Other = select, update-interval=0, no-alert=0, hidden=0, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, policy-regex-filter=^(?!香港|HK|台湾|日本|新加坡|美国).*$
+ALL = select, policy-path=https://api.exfos.net/link/JmHAiXm2vp7mHBdf?list=surge&noclass=9, update-interval=21600, no-alert=0, hidden=0
+
+[Rule]
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/dns-filter.txt,REJECT
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/tracking-protection-filter.txt,REJECT
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/social-media-filter.txt,REJECT
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/neohosts.txt,REJECT
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/neohosts-full.txt,REJECT
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/chinese-filter.txt,REJECT
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/base-filter.txt,REJECT
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/annoyances-filter.txt,REJECT
+DOMAIN-SET,https://cdn.jsdelivr.net/gh/geekdada/surge-list/domain-set/adaway.txt,REJECT
+DOMAIN-SUFFIX,cm.bilibili.com,REJECT
+URL-REGEX,^https?:\/\/api\.bilibili\.com\/x\/v2\/dm\/ad,REJECT
+# 可能的一些推广(beta)
+URL-REGEX,^https?:\/\/api\.bilibili\.com\/pgc\/season\/app\/related\/recommend\?,REJECT
+# BiliBili漫画去广告
+URL-REGEX,^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.comic\/flash,REJECT
+# 知乎广告拦截
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/script/zhihu/zhihu_remove_ads.list,REJECT-DROP
+DOMAIN-SUFFIX,book.com.tw,TW // Added for webpage: jci.book.com.tw:443
+AND,((PROTOCOL,UDP), (DEST-PORT,443)),REJECT-NO-DROP
+DOMAIN,rousong.net,Master // Added for webpage: rousong.net:443
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Telegram/Telegram.list,Telegram
+RULE-SET,https://raw.githubusercontent.com/DivineEngine/Profiles/master/Quantumult/Filter/StreamingMedia/Video/Netflix.list,Netflix
+RULE-SET,https://raw.githubusercontent.com/fishingworld/QuantumultX/master/paypal,US
+RULE-SET,https://raw.githubusercontent.com/fishingworld/QuantumultX/master/Emby_surge,Emby
+RULE-SET,https://raw.githubusercontent.com/DivineEngine/Profiles/master/Quantumult/Filter/StreamingMedia/Video/Bahamut.list,TW
+RULE-SET,https://raw.githubusercontent.com/DivineEngine/Profiles/master/Quantumult/Filter/Extra/Apple/News.list,US
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/TestFlight/TestFlight.list,US
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Surge/Apple/Apple.list,Apple
+RULE-SET,https://raw.githubusercontent.com/fishingworld/QuantumultX/master/bilibili,Bilibili
+GEOIP,CN,DIRECT
+FINAL,Master
